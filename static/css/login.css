@@ -1,0 +1,29 @@
+html {
+}
+
+.main-menu,
+.ftr {
+  display: none;
+}
+
+.login-wrapper .card {
+  background: transparent;
+  border: none;
+}
+.login-wrapper .card.form {
+  border: none;
+  box-shadow: -5px -5px 10px 0px #0000000f, 5px 5px 10px #00000017;
+  border-radius: 16px;
+}
+
+.image-card{
+  padding-left: 100px;
+}
+
+.row{
+  padding-top: 100px;
+}
+
+.row login-wrapper {
+  padding-top: 0px;
+}

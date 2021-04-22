@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="//static.fliphtml5.com/web/js/plugin/LightBox/js/fliphtml5-light-box-api-min.js"></script>
+  <title>{%block title%} {% endblock %}</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+  <!-- fontawesome -->
+  <link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  rel="stylesheet"
+  />
+
+  <!-- Bootstrap CSS -->
+  <link
+  rel="stylesheet"
+  href="{{ url_for('static', filename ='css/bootstrap/bootstrap.min.css')}}"
+  />
+
+  <link
+  rel="stylesheet"
+  href="{{ url_for('static', filename ='css/main.css')}}"
+  />
+  {%block style %} {% endblock %}
+  <style></style>
+</head>
+<body>
+  <div id="wrapper">
+    <div class= "overlay" id="overlay">
+      <!-- main menu -->
+      <nav class="navbar main-menu navbar-expand-sm navbar-light">
+        <a class="navbar-brand" href="{{url_for('admin')}}">
+          <img
+          src="{{ url_for('static', filename = 'img/bookicon.jpg')}}"
+          alt="logo"
+          />
+        </a>
+        <button
+        class="navbar-toggler d-lg-none"
+        type="button"
+        data-toggle="collapse"
+        data-target="#mainMenu"
+        aria-controls="mainMenu"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+        >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainMenu">
+        <div class="navbar">
+          <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"> Menu
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{{ url_for('admin')}}">Home</a>
+              <a class="dropdown-item" href="{{ url_for('search')}}">Search </a>
+              <a class="dropdown-item" href="{{ url_for('profile')}}">Profile </a>
+              <a class="dropdown-item" href="{{ url_for('signout')}}">Sign Out</a>
+            </div>
+          </div>
+        </div> 
+            <!-- <ul class="navbar-nav mt-2 mt-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin')}}"
+                  >Home <span class="sr-only">(current)</span></a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('search')}}">Search </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('profile')}}">Profile </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link btn btns actived"
+                  href="{{ url_for('signout')}}"
+                  >Sign Out</a
+                >
+              </li>
+            </ul> -->
+          </div>
+        </nav>
+        <div class="container" style="margin-bottom: 150px">
+          {%block body%} {%endblock%}
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Footer -->
+    <div class="ftr" style="position: relative;">
+  <!-- position: fixed;
+  **height:10%;**
+  width:100%;
+  padding-top: 2px;
+  bottom: 0;
+  clear: both;
+  background-color: black;
+  color: white;
+  float: left;
+  overflow: auto; -->
+  <footer class="page-footer font-small teal pt-4">
+
+    <!-- Footer Text -->
+    <div class="container-fluid text-center text-md-left">
+
+      <!-- Grid row -->
+      <div class="row">
+
+        <!-- Grid column -->
+        <div class="col-md-6 mt-md-0 mt-3">
+
+          <!-- Content -->
+          <h5 class="text-uppercase font-weight-bold">About</h5>
+          <p>In this project, you’ll build a book review website. Users will be able to register for your website and then log in using their username and password. Once they log in, they will be able to search for books, leave reviews for individual books, and see the reviews made by other people. </p>
+
+        </div>
+        <!-- Grid column -->
+
+        <hr class="clearfix w-100 d-md-none pb-3">
+
+        <!-- Grid column -->
+        <div class="col-md-6 mb-md-0 mb-3">
+
+          <!-- Content -->
+          <h5 class="text-uppercase font-weight-bold">Contact Us</h5>
+          <p>Name: Henok Gelaneh <br>
+          ID: Atr/7217/10 <br>
+          Email: <a href="mailto:henokgelaneh@gmail.com"> henokgelaneh@gmail.com </a></p>
+
+        </div>
+        <!-- Grid column -->
+
+      </div>
+      <!-- Grid row -->
+
+    </div>
+    <!-- Footer Text -->
+
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2021 Copyright:
+      <a href="https://github.com/henokgelaneh7217"> github.com/henokgelaneh7217</a>
+    </div>
+    <!-- Copyright -->
+
+  </footer>
+</div>
+<!-- Footer -->
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+<script
+src="{{ url_for('static', filename = 'js/jquery.js')}}"
+crossorigin="anonymous"
+></script>
+
+
+<script src="{{ url_for('static', filename = 'js/popper.js')}}"></script>
+
+<script src="{{ url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
+<script src="{{ url_for('static', filename = 'js/main.js')}}"></script>
+{%block script %} {%endblock%}
+</body>
+</html>

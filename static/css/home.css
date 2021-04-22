@@ -1,0 +1,27 @@
+html {
+}
+
+.footer {
+  display: none;
+}
+
+/*.card {
+  background: transparent;
+  border: none;*/
+
+.col{
+  padding-right: 0px;
+  margin-right: 0px;
+}
+.card {
+  border: none;
+  box-shadow: -5px -5px 10px 0px #0000000f, 5px 5px 10px #00000017;
+  border-radius: 16px;
+  width: 300px;
+}
+.card-right {
+  border: none;
+  box-shadow: -5px -5px 10px 0px #0000000f, 5px 5px 10px #00000017;
+  border-radius: 16px;
+}
+
