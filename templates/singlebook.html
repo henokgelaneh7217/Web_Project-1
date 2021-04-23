@@ -1,34 +1,14 @@
 {%extends "layout.html"%} {%block title%} Single Books {%endblock%} 
-{%block style
-  %}
-  <link
-  rel="stylesheet"
-  href="{{ url_for('static', filename ='css/book.css')}}"
-  />
-  <link
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-  rel="stylesheet"
-  />
-  <link rel="stylesheet" href="{{ url_for('static', filename ='fonts/material-icon/css/material-design-iconic-font.min.css')}}">
+{%block style%}
+  <link rel="stylesheet" href="{{ url_for('static', filename ='css/book.css')}}"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
   {% endblock %}
   {%block body%}
   <div class="row">
-    <div
-    class="message"
-    style="height: 44px; background: transparent; width: 100%; margin: 10px 0;"
-    >
-    {% with messages = get_flashed_messages() %} {%if messages%} {%for i in
-    messages %}
-    <div
-    class="text-center alert alert-success alert-dismissible fade show"
-    role="alert"
-    >
-    <button
-    type="button"
-    class="close"
-    data-dismiss="alert"
-    aria-label="Close"
-    >
+    <div class="message" style="height: 44px; background: transparent; width: 100%; margin: 10px 0;">
+    {% with messages = get_flashed_messages() %} {%if messages%} {%for i in messages %}
+    <div class="text-center alert alert-success alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
   <strong> {{i}} </strong> 
@@ -36,7 +16,6 @@
 {%endfor%} {%endif%} {%endwith%}
 </div>
 </div>
-<!--message row finish-->
 
 <div class="row mt-4 book-info">
   <div class="col-md-3">
@@ -49,7 +28,6 @@
   <div class="col-md-4">
     <div class="card  mt-4">
       {%if dbdata %}
-
       <table class="table table-striped">
         <thead>
           <!-- data from database -->
@@ -76,7 +54,6 @@
          </tr>
          {%endfor%}
 
-         <!-- data from apicall  -->
          {%if apidata %}
          <tr>
           <th>Total Reviews</th>
@@ -101,22 +78,11 @@
   <div class="card mt-4">
     {%for i in dbdata%}
     <h4 class="text-center">Review Book:</h4>
-    <form
-    action="{{baseUrl}}"
-    method="POST"
-    id="reviewForm"
-    >
+    <form action="{{baseUrl}}" method="POST" id="reviewForm">
     {%endfor%}
-
     <td>
       {%for i in dbdata %}
-      <input
-      type="hidden"
-      class="form-control disabled"
-      name="isbn"
-      value="{{i[1]}}"
-      readonly
-      />
+      <input type="hidden" class="form-control disabled" name="isbn" value="{{i[1]}}"readonly/>
       {%endfor%}
     </td>
     <div class="rating">
@@ -133,59 +99,11 @@
             </div>
           </td>
         </tr>
-
-        <!-- <tr>
-          <td>Rating</td>
-          <td>
-            <input
-              type="radio"
-              class="form-check-input"
-              name="rating"
-              value="1"
-            >
-            ☆ <br />
-            <input
-              type="radio"
-              class="form-check-input"
-              name="rating"
-              value="2"
-            />
-            ☆☆ <br />
-            <input
-              type="radio"
-              class="form-check-input"
-              name="rating"
-              value="3"
-            />
-            ☆☆☆ <br />
-            <input
-              type="radio"
-              class="form-check-input"
-              name="rating"
-              value="4"
-            />
-            ☆☆☆☆ <br />
-            <input
-              type="radio"
-              class="form-check-input"
-              name="rating"
-              value="5"
-            />
-            ☆☆☆☆☆ <br />
-          </td>
-        </tr> -->
-
-        
         <tr>
           <td>Comment:</td>
           <td>
             <div class="comment">
-              <textarea
-              placeholder="Write your comment here"
-              class="form-control"
-              name="comment"
-              rows="3"
-              ></textarea>
+              <textarea placeholder="..." class="form-control" name="comment" rows="2"></textarea>
             </div>
           </td>
         </tr>
@@ -195,17 +113,13 @@
   </form>
 </div>
 {{dbemail}}
-
 </div>
 </div>
 
-
-<!-- reviews section -->
 <div class="row mt-5">
   <div class="col-sm-12 col-md-7">
     <h3>Reviews</h3>
     {%if dbreviews %} {%for i in dbreviews %}
-
     <div class="comment-main mt-4 text-justify float-left"> 
       <img src="{{url_for('static', filename = 'img/comment.png')}}" alt="" class="rounded-circle" width="40" height="40">
       <h5>{{i[0]}} </h5> <span>-{{ i[4].strftime("%B %d, %Y") }} </span> <br>
@@ -234,15 +148,10 @@
         </script>
        -->
     </div>
-
-
       {%endfor%} {%else %}
-
-      <h1>No reviews found</h1>
+      <h4>No Reviews Yet!</h4>
       {%endif%}
     </div>
-
-
   </div>
   {{bookinfo}} {%endblock%}
 

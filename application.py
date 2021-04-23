@@ -1,40 +1,23 @@
-import os
-# from flask_session import Session
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from flask import Flask, redirect, render_template, url_for , session, request, flash
-from datetime import timedelta
 import psycopg2
+from flask import Flask
 import requests
 import json
-from flask import jsonify
+from flask import jsonify, flash, redirect, url_for, render_template, request 
+from flask import session
+from datetime import timedelta
 
 app = Flask(__name__)
+app.permanent_session_lifetime = timedelta(days=1)
+app.secret_key = 'key1234key5678'
 
-os.environ['DATABASE_URL'] = "postgresql://tajkczbpbvimtl:45cc6a4159ff2a7e4b5af48cc85220202e243d1e8a62431c2d63aa6d6efe733a@ec2-34-250-16-127.eu-west-1.compute.amazonaws.com:5432/dbd64qsfoslgk9"
-
-# Check for environment variable
-if not os.getenv("DATABASE_URL"):
-    raise RuntimeError("DATABASE_URL is not set")
-
-# Configure session to use filesystem
-
-app.permanent_session_lifetime = timedelta(days=5)
-# app.config["SESSION_PERMANENT"] = False
-# app.config["SESSION_TYPE"] = "filesystem"
-app.secret_key = 'hello'
-
-
-# Set up database
-engine = create_engine(os.getenv("DATABASE_URL"))
-db = scoped_session(sessionmaker(bind=engine))
-
-# login system logic starts here 
+con = psycopg2.connect("dbname='dbd64qsfoslgk9' user='tajkczbpbvimtl' host='ec2-34-250-16-127.eu-west-1.compute.amazonaws.com' password='45cc6a4159ff2a7e4b5af48cc85220202e243d1e8a62431c2d63aa6d6efe733a'")
+cur = con.cursor()
+ 
 @app.route('/')
 def signin():
     if 'name' in session:
         flash('Already Signed in')
-        return redirect(url_for('admin'))
+        return redirect(url_for('home'))
     else:
         return render_template('signin.html')
 
@@ -42,7 +25,7 @@ def signin():
 def signup():
     if 'name' in session:
         flash('Already Signed in')
-        return redirect(url_for('admin'))
+        return redirect(url_for('home'))
     else:
         return render_template('register.html')
 
@@ -50,50 +33,76 @@ def signup():
 def profile():
     if 'email' in session:    
         email = session['email']   
-        db_user_query = db.execute("select * from public.users where email = :email", {'email': email}).fetchall()
-        # root = request.url_root()
-        userInfo = {
-            'name': db_user_query[0][0], 
+        query = "SELECT * FROM public.users WHERE email=%s"
+        cur.execute(query, (email,))
+        user_email = cur.fetchall()
+        profile = {
+            'name': user_email[0][0], 
             'email': session['email'],
-            'password': db_user_query[0][2],
-            'date': db_user_query[0][3]
+            'password': user_email[0][2],
+            'date': user_email[0][3]
         }
-        return render_template('profile.html', userInfo = userInfo)
+        return render_template('profile.html', profile=profile)
 
     else: 
         flash('Sign In first')
         return redirect(url_for('signin'))
         
+@app.route('/register' , methods = ['POST','GET'])
+def register():
+   if request.method == 'POST':
+      name = request.form['Name']
+      email = request.form['Email']
+      password = request.form['Password']
+      query = "SELECT * FROM public.users WHERE email=%s"
+      cur.execute(query, (email,))
+      check = cur.fetchone()
+      if check:
+         flash('You are already Registered. Please Log In.')
+         return redirect(url_for('signin'))
+      else :
+         cur.execute("INSERT INTO public.users (name, email, password) VALUES (%s,%s,%s)", (name,email,password))
+         con.commit()
+         session['name'] = name
+         session['email'] = email
+         session['password'] = password
+
+         flash('Registraion Successful')
+         return redirect(url_for('home'))
+   else:
+      if 'name' in session:
+         flash('You are already Registered. Please Log In.')
+         return redirect(url_for('home'))
+      else:
+         return render_template('signin.html')
 
 @app.route('/signin_validation', methods=["POST", "GET"])
 def signin_validation():
     if request.method == 'POST':
-        # get user info from input
-        email = request.form['signinEmail']
-        password = request.form['signinPassword']
-
-        # check if password match with database
-        check_user = db.execute("select * from public.users where email = :email", {'email' : email}).fetchone()
-
-        if check_user: 
+        email = request.form['Emailin']
+        password = request.form['Passwordin']
+        query = "SELECT * FROM public.users WHERE email=%s"
+        cur.execute(query, (email,))
+        check = cur.fetchone()
+        if check: 
             list = []
-            for i in check_user:
+            for i in check:
                list.append(i)
 
-            check_name = list[0]
-            check_email = list[1]
-            check_pass = list[2]
-            check_date = list[3]
-            if check_email == email and check_pass == password:
+            val_name = list[0]
+            val_email = list[1]
+            val_pass = list[2]
+            val_date = list[3]
+            if val_email == email and val_pass == password:
                 session.permanent = True
-                session['name'] = check_name
-                session['password'] = check_pass
-                session['email'] = check_email
-                session['date'] = check_date
+                session['name'] = val_name
+                session['password'] = val_pass
+                session['email'] = val_email
+                session['date'] = val_date
                 flash('Welcome '+list[0])
-                return redirect(url_for('admin'))
+                return redirect(url_for('home'))
             else:
-                flash('Username or Passoword Incorrect.')
+                flash('Email or Password Incorrect.')
                 return redirect(url_for('signin'))
         else:
             flash('Please Register first.')
@@ -103,61 +112,31 @@ def signin_validation():
         return redirect(url_for('signin'))
 
 
-@app.route('/admin')
-def admin():
+@app.route('/home')
+def home():
     if 'email' in session:    
-        email = session['email']   
-        db_user_query = db.execute("select * from public.users where email = :email", {'email': email}).fetchall()
-        db_review_query = db.execute(" select * from public.reviews where email = :email", {'email' : email}).fetchall()
-        # root = request.url_root()
+        email = session['email']  
+
+        query = "SELECT * FROM public.users WHERE email=%s"
+        cur.execute(query, (email,))
+        profile = cur.fetchall()
+
+        query2 = "SELECT * FROM public.reviews WHERE email=%s"
+        cur.execute(query2, (email,))
+        review = cur.fetchall() 
+
         userInfo = {
-            'name': db_user_query[0][0], 
+            'name': profile[0][0], 
             'email': session['email'],
-            'password': db_user_query[0][2],
-            'date': db_user_query[0][3]
+            'password': profile[0][2],
+            'date': profile[0][3]
         }
-        reviewCount = len(db_review_query)
-
-
-        return render_template('admin.html', userInfo = userInfo, reviewedbooks = db_review_query , reviewCount= reviewCount )
+        reviewnum = len(review)
+        return render_template('home.html', userInfo = userInfo, reviewedbooks = review , reviewCount= reviewnum )
 
     else: 
         flash('Sign In first')
         return redirect(url_for('signin'))
-
-@app.route('/register' , methods = ['POST','GET'])
-def register():
-   if request.method == 'POST':
-      # get info from user input
-      name = request.form['signupName']
-      email = request.form['signupEmail']
-      password = request.form['signupPassword']
-
-      #check if the email is already in the table 
-      check_user = db.execute("select * from public.users where email = :email", {'email' : email}).fetchall()
-      
-      if check_user:
-         flash('You are already Registered. Please Log In.')
-         return redirect(url_for('signin'))
-      else :
-         # add a new user in database
-         db.execute("INSERT INTO public.users (name, email, password) VALUES (:name, :email , :password)", {
-            "name":name, "email":email, "password":password})
-         db.commit()
-
-         #save the data in session
-         session['name'] = name
-         session['email'] = email
-         session['password'] = password
-
-         flash('Registraion Successful')
-         return redirect(url_for('admin'))
-   else:
-      if 'name' in session:
-         flash('You are already Registered. Please Log In.')
-         return redirect(url_for('admin'))
-      else:
-         return render_template('signin.html')
 
 @app.route('/signout')
 def signout():
@@ -177,55 +156,68 @@ def search():
     if request.method == "POST":
         title = request.form['byTitle']
         title = title.title()
+
         author = request.form['byAuthor']
         year = request.form['byYear']
         isbn = request.form['byIsbn']
-
         list = []
         text = None
         baseUrl = request.base_url
         if title:
-            result = db.execute(" SELECT * FROM books WHERE title LIKE '%"+title+"%' ;").fetchall()
+            query = "SELECT * FROM books WHERE title=%s"
+            cur.execute(query, (title,))
+            result = cur.fetchall()
             text = title
+
         elif author:
-            result = db.execute(" SELECT * FROM books WHERE author LIKE '%"+author+"%' ;").fetchall()
+            query = "SELECT * FROM books WHERE author=%s"
+            cur.execute(query, (author,))
+            result = cur.fetchall()
             text = author
+
         elif year:
-            result = db.execute(" SELECT * FROM books WHERE year = :year", {'year':year}).fetchall()
+            query = "SELECT * FROM books WHERE year=%s"
+            cur.execute(query, (year,))
+            result = cur.fetchall()
             text = year
+
         else:
-            result = db.execute(" SELECT * FROM books WHERE isbn LIKE '%"+isbn+"%' ;").fetchall()
+            query = "SELECT * FROM books WHERE isbn=%s"
+            cur.execute(query, (isbn,))
+            result = cur.fetchall()
             text = isbn
 
-        #if found then save it in list 
         if result: 
             for i in result : 
                 list.append(i)
             itemsCount = len(list)
             return render_template('search.html', baseUrl = baseUrl,  items = list, msg = "Books Found", text = text , itemsCount = itemsCount)
             
-        #if not found show a not found message
         else:
             return render_template('search.html', msgNo = "Sorry! No books found" , text = text)
-
-
-   
     return render_template ('search.html')
 
 
 @app.route('/book/<string:isbn>', methods = ['GET', 'POST'])
 def singleBook(isbn):
-
     isbn = isbn
     email = session['email']
-
     apiCall = None
     apidata = None
     baseUrl = request.base_url
-    dbdata = db.execute(" SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
-    dbreviews = db.execute('SELECT * FROM reviews WHERE isbn = :isbn', {'isbn': isbn}).fetchall()
 
-    alreadyHasReview = db.execute('SELECT * FROM public.reviews WHERE isbn = :isbn and email = :email ', {'isbn': isbn, 'email': email}).fetchall()
+    query = "SELECT * FROM books WHERE isbn=%s"
+    cur.execute(query, (isbn,))
+    dbdata = cur.fetchall()
+
+    query2 = "SELECT * FROM reviews WHERE isbn=%s"
+    cur.execute(query2, (isbn,))
+    dbreviews = cur.fetchall()
+
+    query3 = "SELECT * FROM public.reviews WHERE isbn=%s AND email=%s"
+    cur.execute(query3, (isbn,email,))
+    alreadyHasReview = cur.fetchall()
+
     if request.method == 'POST':
         if alreadyHasReview: 
             flash("There's another review on record")
@@ -234,8 +226,8 @@ def singleBook(isbn):
             comment = request.form['comment']
             email = session['email']
             fisbn = request.form['isbn']
-            db.execute("INSERT into public.reviews (email, rating, comment, isbn) Values (:email, :rating, :comment, :isbn)", {'email': email, 'rating': rating, 'comment': comment, 'isbn': fisbn})
-            db.commit()
+            cur.execute("INSERT into public.reviews (email, rating, comment, isbn) Values (%s,%s,%s,%s)", (email, rating,comment,fisbn))
+            con.commit()
             flash('Review Submitted!')
     
     if apiCall:
@@ -244,32 +236,6 @@ def singleBook(isbn):
         flash('Could not fetch data.')
         return render_template('singlebook.html', dbdata = dbdata, dbreviews = dbreviews, isbn = isbn, baseUrl = baseUrl)
 
-    
-       
-# @app.route("/book/api/<string:isbn>")
-# def api(isbn):
-#     if 'email' in session: 
-#         data=db.execute("SELECT * FROM public.books WHERE isbn = :isbn",{"isbn":isbn}).fetchone()
-#         if data==None:
-#             return render_template('404.html')
-#         res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "PlM0Yn7UcJQxgM6X2k1rA", "isbns": isbn})
-#         average_rating=res.json()['books'][0]['average_rating']
-#         work_ratings_count=res.json()['books'][0]['work_ratings_count']
-#         x = {
-#         "title": data.title,
-#         "author": data.author,
-#         "year": data.year,
-#         "isbn": isbn,
-#         "review_count": work_ratings_count,
-#         "average_rating": average_rating
-#         }
-#         # api=json.dumps(x)
-#         # return render_template("api.json",api=api)
-#         return  jsonify(x)
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
 
 if __name__ == '__main__':
     app.run(debug =True)

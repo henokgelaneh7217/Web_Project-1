@@ -1,220 +1,105 @@
-{%extends "layout.html" %} {%block style
-%}
-<style>
-.testimonial-group > .row {
-  display: block;
-  overflow-x: auto;
-  white-space: nowrap;
-}
-.testimonial-group > .row > .col-4 {
-  display: inline-block;
-}
-
-/* Decorations */
-.col-4 { color: #000000; font-size: 15px; padding-bottom: 20px; padding-top: 18px; }
-.col-4:nth-child(3n+1) { background: #f7faed; }
-.col-4:nth-child(3n+2) { background: #d6faff; }
-.col-4:nth-child(3n+3) { background: #d6ffd7; }
-        }
-.table {
-  border-collapse: collapse;
-}
-
-.table tr {
-  border-bottom: 1px solid black;
-}
-
-.table tr:last-child {
-  border: 0;
-}
-footer {
-  background: #d1d1d1;
-  color: #000000;
-  padding: 12px;
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-content: space-around;
-  font-size: 12px;
-  bottom: 0;
-  position: fixed;
-}
-</style>
+{%extends "layout.html" %} {%block style%}
+<link rel="stylesheet" href="{{ url_for('static', filename ='css/search.css')}}"/>
 {% endblock %} {%block body%}
 <div class="row d-flex justify-content-center">
-
-    <form action="/book" method="POST">
-      <div class="form-group">
-        <label for="name" class="text-center h2"> Search </label>
-        <div class="row">
-          <div class="col">
-        <input
-          type="search"
-          name="byIsbn"
-          id="name"
-          class="form-control mt-1"
-          placeholder="ISBN"
-          aria-describedby="name"
-        />
+  <form action="/book" method="POST">
+    <div class="form-group">
+      <label for="name" class="text-center h2"> Search </label>
+      <div class="row">
+        <div class="col">
+          <input type="search" name="byIsbn" id="name" class="form-control mt-1" placeholder="ISBN" aria-describedby="name"/>
         </div>
-           <div class="col">
-        <input
-          type="search"
-          name="byTitle"
-          id="name"
-          class="form-control mt-1"
-          placeholder="Title"
-          aria-describedby="name"
-        />
-      </div>
         <div class="col">
-        <input
-          type="search"
-          name="byAuthor"
-          id="name"
-          class="form-control mt-1"
-          placeholder="Author"
-          aria-describedby="name"
-        />
-      </div>
+          <input type="search" name="byTitle" id="name" class="form-control mt-1" placeholder="Title" aria-describedby="name"/>
+        </div>
         <div class="col">
-        <input
-          type="number"
-          name="byYear"
-          id="name"
-          class="form-control mt-1"
-          placeholder="Publication Year"
-          aria-describedby="name"
-        />
+          <input type="search" name="byAuthor" id="name" class="form-control mt-1" placeholder="Author" aria-describedby="name"/>
+        </div>
+        <div class="col">
+          <input type="number" name="byYear" id="name" class="form-control mt-1" placeholder="Publication Year" aria-describedby="name"/>
+        </div>
+        <div class="col">
+          <button type="submit" class="btns"> Find </button>
+        </div>
       </div>
-    
-      
-      <div class="col">
-      <button type="submit" class="btns">
-        Find
-      </button>
-    </div>
-  </div>
     </form>
   </div>
 
-
-
- <div class="row">
+  <div class="row">
     {% if itemsCount %}
-    <div
-      class="text-center alert alert-success alert-dismissible fade show"
-      role="alert"
-    >
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-      >
+    <div class="text-center alert alert-success alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
       <p>
         <strong> {{itemsCount}} book matches </strong> found!
       </p>
     </div>
-
-    <script>
-      $(".alert").alert();
-    </script>
+    <script> $(".alert").alert();</script>
     {%endif%} {% if msgNo %}
     <div
-      class="text-center alert alert-danger alert-dismissible fade show"
-      role="alert"
+    class="text-center alert alert-danger alert-dismissible fade show"
+    role="alert"
     >
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <p>{{msgNo}} for: <strong> {{text}}</strong></p>
-    </div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <p>{{msgNo}} for: <strong> {{text}}</strong></p>
+  </div>
 
-    <script>
-      $(".alert").alert();
-    </script>
-    {{hello}} {%endif%}
+  <script>
+    $(".alert").alert();
+  </script>
+  {{key1234key5678}} {%endif%}
 </div>
-
 
 <div class="container testimonial-group">
   {%if items%}
-<div class="row text-center"><h3>Books:</h3></div>
-{%endif %}
+  <div class="row text-center"><h3>Books:</h3></div>
+  {%endif %}
   <div class="row text-center">
-
     {%if items%}
-<!--     <div class="container horizontal-scrollable">
-          <div class="row text-center"> -->
-                  {% for i in items %}
-                  <div class="col-4">
-                    <table class="table table-hover">
-                      <tr>
-                        <td>
-                          Title
-                        </td>
-                        <td>
-                          <a href="{{baseUrl}}/{{i[1]}}"> {{i[2]}}</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          Author
-                        </td>
-                        <td>
-                          <a href="https://en.wikipedia.org/wiki/{{i[3]}}"> {{i[3]}}</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          Pub.Year
-                        </td>
-                        <td>
-                          {{i[4]}}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          ISBN
-                        </td>
-                        <td>
-                          <a href="https://www.bookfinder.com/search/?isbn={{i[1]}}&mode=isbn&st=sr&ac=qr"> {{i[1]}}</a>
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-                  {% endfor %}
-               <!--  </div>
-              </div> -->
-    <!-- <table class="table table-hover">
-      <thead>
+    {% for i in items %}
+    <div class="col-4">
+      <table class="table table-hover">
         <tr>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Year</th>
-          <th>ISBN</th>
+          <td>
+            Title
+          </td>
+          <td>
+            <a href="{{baseUrl}}/{{i[1]}}"> {{i[2]}}</a>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        {% for i in items %}
         <tr>
-          <td><a href="{{baseUrl}}/{{i[1]}}"> {{i[2]}}</a></td>
-          <td>{{i[3]}}</td>
-          <td>{{i[4]}}</td>
-          <td><a href="{{baseUrl}}/api/{{i[1]}}"> {{i[1]}}</a></td>
+          <td>
+            Author
+          </td>
+          <td>
+            <a href="https://en.wikipedia.org/wiki/{{i[3]}}"> {{i[3]}}</a>
+          </td>
         </tr>
-        {% endfor %}
-      </tbody>
-    </table> -->
+        <tr>
+          <td>
+            Pub.Year
+          </td>
+          <td>
+            {{i[4]}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            ISBN
+          </td>
+          <td>
+            <a href="https://www.bookfinder.com/search/?isbn={{i[1]}}&mode=isbn&st=sr&ac=qr"> {{i[1]}}</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+    {% endfor %}
+               
   </div>
-    {%endif %}
+  {%endif %}
 </div>
 
 

@@ -1,18 +1,9 @@
 {%extends "layout.html"%} {%block title %} Home page {% endblock %} {%block style%}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename = 'css/profile.css') }}"
-/>
-<link rel="stylesheet" href="{{ url_for('static', filename ='fonts/material-icon/css/material-design-iconic-font.min.css')}}"
->
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/profile.css') }}"/>
 {% endblock %} {% block body %}
 <div class="row">
-  <div
-    class="message"
-    style="height: 44px; background: transparent; width: 100%; margin: 10px 0;"
-  >
-    {% with messages = get_flashed_messages() %} {%if messages%} {%for i in
-    messages %}
+  <div class="message" style="height: 44px; background: transparent; width: 100%; margin: 10px 0;">
+    {% with messages = get_flashed_messages() %} {%if messages%} {%for i in messages %}
     <div class="alert alert-success text-center" role="alert">
       <strong>{{i}}</strong>
     </div>
@@ -25,10 +16,7 @@
     <div class="card form mt-4">
         <img class="card-img-top" src="holder.js/100x180/" alt="" />
           <div class="card-body">
-            <img
-              src="{{ url_for('static', filename = 'img/userimg.jpg') }}"
-              alt=""
-            />
+            <img src="{{ url_for('static', filename = 'img/userimg.jpg') }}"/>
           </div>
     </div>
   </div>
@@ -40,37 +28,33 @@
             <tr>
               <td>
                 <h5 class="card-title">
-                  <i class="fa fa-address-card font-weight-bold" aria-hidden="true"></i>
-                  Profile
+                  <i class="fa fa-address-card font-weight-bold" aria-hidden="true"></i>Profile
                 </h5>
               </td>
             </tr>
             <tr>
               <td>
-                <i class="fa fa-user-circle font-weight-bold" aria-hidden="true"></i>
-                Name:
+                <i class="fa fa-user-circle font-weight-bold" aria-hidden="true"></i>Name:
               </td>
-              <td>{{userInfo['name']}}</td>
+              <td>{{profile['name']}}</td>
             </tr>
             <tr>
               <td>
-                <i class="fa fa-envelope-open font-weight-bold" aria-hidden="true"></i>
-                Email:
+                <i class="fa fa-envelope-open font-weight-bold" aria-hidden="true"></i>Email:
               </td>
-              <td>{{userInfo['email']}}</td>
+              <td>{{profile['email']}}</td>
             </tr>
             <tr>
               <td>
-                <i class="fa fa-asterisk font-weight-bold" aria-hidden="true"></i>
-                Password:
+                <i class="fa fa-asterisk font-weight-bold" aria-hidden="true"></i>Password:
               </td>
-              <td>{{userInfo['password']}}</td>
+              <td>{{profile['password']}}</td>
             </tr>
             <tr>
               <td>
                 <i class="fa fa-calendar-check-o" aria-hidden="true"></i>Created on:
               </td>
-              <td>{{userInfo['date'].strftime("%d %B, %Y") }}</td>
+              <td>{{profile['date'].strftime("%d %B, %Y") }}</td>
             </tr>
           </tbody>
         </table>
@@ -78,30 +62,5 @@
     </div>
   </div>
 </div>
-
-  <!-- <div class="col-sm-12 col-md-6">
-    <div class="row login-wrapper" style="display: flex; align-items: center;">
-    <div class="card info mt-4">
-      
-    </div>
-  </div>
-  <div class="row login-wrapper" style="display: flex; align-items: center;">
-    
-  </div>
-  </div>
-
-    {%if userInfo %}
- -->
-    <!-- <div class="card-right">
-
-
-    </div> -->
-
-    <!-- {%endif%}
-
-  </div>
-</div>
-</div> -->
-
 
 {% endblock %}

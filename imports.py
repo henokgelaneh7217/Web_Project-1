@@ -1,26 +1,13 @@
 import csv 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+import psycopg2
 import datetime
 import os 
 
-os.environ['DATABASE_URL'] = "postgresql://efcvdeedflhnps:50cdeb6ea4ed4af658a15072dbc63e50772af4f8a4af833888dd9ba6cb402fd6@ec2-54-220-35-19.eu-west-1.compute.amazonaws.com:5432/dfphtsjujmr9m6"
+con = psycopg2.connect("dbname='dbd64qsfoslgk9' user='tajkczbpbvimtl' host='ec2-34-250-16-127.eu-west-1.compute.amazonaws.com' password='45cc6a4159ff2a7e4b5af48cc85220202e243d1e8a62431c2d63aa6d6efe733a'")
+cur = con.cursor()
 
-# Check for environment variable
-if not os.getenv("DATABASE_URL"):
-    raise RuntimeError("DATABASE_URL is not set")
-
-# Set up database
-engine = create_engine(os.getenv("DATABASE_URL"))
-db = scoped_session(sessionmaker(bind=engine))
-
-startTime = datetime.datetime.now()
-
-print ( f"starting actions at: {startTime}")
-
-#  ======= Creating tables
-#books table
-db.execute(""" CREATE TABLE books ( 
+cur.execute(
+    """ CREATE TABLE books ( 
     id SERIAL NOT NULL, 
     isbn varchar(100) NOT NULL, 
     title varchar (100) NOT NULL, 
@@ -28,48 +15,43 @@ db.execute(""" CREATE TABLE books (
     year integer NOT NULL, 
     date DATE NOT NULL DEFAULT CURRENT_DATE,
     PRIMARY KEY (isbn) )  """)
-print('books table created')
 
-# users table 
-db.execute(""" CREATE TABLE users (
+print('books created!')
+
+cur.execute(
+    """ CREATE TABLE users (
     name varchar(100) NOT NULL, 
     email varchar(100) NOT NULL, 
     password varchar(100) NOT NULL, 
     date DATE NOT NULL DEFAULT CURRENT_DATE,
     PRIMARY KEY (email));  """)
 
-print('users table created')
-# reviews table 
-db.execute(""" CREATE TABLE reviews (
+print('users created!')
+
+cur.execute(
+    """ CREATE TABLE reviews (
     email varchar(100) NOT NULL, 
     rating integer NOT NULL, 
     comment varchar(1200) NOT NULL, 
     isbn varchar(100) NOT NULL, 
     date DATE NOT NULL DEFAULT CURRENT_DATE) ;  """)
 
-print('reviews table created')
-
-f = open('books.csv')
-reader = csv.reader(f)
-
+print('reviews created!')
 
 i = 1 
-endtime = None
-for isbn, title, author, year in reader:
+timeset = None
+with open('books.csv','r') as f:
+    
+    timeset= datetime.datetime.now()
+    reader=csv.reader(f)
+    next(reader)
+    for row in reader:
+        i += 1 
+        cur.execute(" INSERT INTO public.books (isbn, title, author, year ) VALUES (%s,%s,%s,%s)",row)
+        print ( f"{i} books added successfully at {timeset}")
 
-    i += 1 
-    endtime = datetime.datetime.now()
-
-    if title == 'title':
-        print (' Skipping 1st row')
-    else:
-        db.execute(" INSERT INTO public.books (isbn, title, author, year ) VALUES (:a, :b, :c, :d)", {'a':isbn, 'b':title, 'c': author, 'd':year} )
-        print ( f"{i} books added successfully at {endtime}")
-
-# for name, email password in reader2:
-
-db.commit() 
-timeDiff = endtime - startTime
-timeDiffSeconds = timeDiff.seconds 
-print ( f"Total time to complete action: {timeDiff} ")
-print ( f"Total time to complete action in seconds: {timeDiffSeconds} ")
+con.commit() 
+timeDiff = endtime
+print ( f"Action Completed In: {timeDiff} ")
+cur.close()
+con.close()

@@ -1,0 +1,40 @@
+{%extends "layout.html"%} {%block title %} Home {% endblock %} {%block
+style%}
+<link
+rel="stylesheet"
+href="{{ url_for('static', filename = 'css/home.css') }}"
+/>
+{% endblock %} {% block body %}
+<!-- messages -->
+<div class="row">
+  <div
+  class="message"
+  style="height: 44px; background: transparent; width: 100%; margin: 10px 0;"
+  >
+  {% with messages = get_flashed_messages() %} {%if messages%} {%for i in
+  messages %}
+  <div class="alert alert-success text-center" role="alert">
+    <strong>{{i}}</strong>
+  </div>
+  {%endfor%} {%endif%} {%endwith%}
+</div>
+</div>
+<!--message row finish-->
+<div class="row d-flex justify-content-center">
+  <div class="card">
+    <p style="padding: 10px"> Book of the day: <b>The Escape by David Baldaccai.</b> Click the cover to read it! </p>
+    <p style="font-style: italic; padding: 13px">John Puller is a Chief Warrant Officer in the Criminal Investigation Division (CID) of the U.S. Army and the youngest son of a well-known family of soldiers in The Escape. Puller’s brother, Air Force Major Bob Puller, is currently incarcerated for life at the Fort Leavenworth federal prison accused of national security crimes. After a rare power blackout, the aftermath results in the death of an unknown man and the disappearance of Major Puller.
+
+    This latest book is an action-packed military thriller sure to impress even those who are new to the genre. It follows John Puller in search of a Fort Leavenworth military prison escapee who is wanted for treason and national security crimes: his own brother, Major Bobby Puller. </p>
+  </div>
+  <img src="https://online.fliphtml5.com/hydku/czfk/files/shot.jpg" data-rel="fh5-light-box-demo" data-href="https://online.fliphtml5.com/hydku/czfk/" data-width="900" data-height="500" data-title="The Escape">
+</div>
+<div class="row d-flex justify-content-center">
+  <p style="font-weight:bold; padding-top: 20px"> Quote of the day - </p>
+  <p style="font-style: italic;">
+    “Sometimes, you read a book and it fills you with this weird evangelical zeal, and you become convinced that the shattered world will never be put back together unless and until all living humans read the book.”
+  </p>
+  <p>-John Green</p>
+</div>
+
+{% endblock %}
