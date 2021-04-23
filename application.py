@@ -90,13 +90,13 @@ def signin_validation():
                 session['password'] = check_pass
                 session['email'] = check_email
                 session['date'] = check_date
-                flash('Signin successful')
+                flash('Welcome '+list[0])
                 return redirect(url_for('admin'))
             else:
-                flash('User name or password is incorrect')
+                flash('Username or Passoword Incorrect.')
                 return redirect(url_for('signin'))
         else:
-            flash('You are not registed in this website. Please register first.')
+            flash('Please Register first.')
             return redirect(url_for('signin'))
     else:
         flash('Signin failed')
@@ -137,7 +137,7 @@ def register():
       check_user = db.execute("select * from public.users where email = :email", {'email' : email}).fetchall()
       
       if check_user:
-         flash('You are already registed.')
+         flash('You are already Registered. Please Log In.')
          return redirect(url_for('signin'))
       else :
          # add a new user in database
@@ -150,11 +150,11 @@ def register():
          session['email'] = email
          session['password'] = password
 
-         flash('Registraion successful')
+         flash('Registraion Successful')
          return redirect(url_for('admin'))
    else:
       if 'name' in session:
-         flash('You are Already registered ')
+         flash('You are already Registered. Please Log In.')
          return redirect(url_for('admin'))
       else:
          return render_template('signin.html')
@@ -166,10 +166,10 @@ def signout():
         session.pop('email', None)
         session.pop('password', None)
 
-        flash('Signed out successfully', 'info')
+        flash('Sign Out Sucessful.', 'info')
         return redirect(url_for('signin'))
     else:
-        flash('Already Singed out')
+        flash('Already Singed out.')
         return  redirect(url_for('signin'))
 
 @app.route('/book', methods=['GET', 'POST'])
@@ -241,7 +241,7 @@ def singleBook(isbn):
     if apiCall:
         return render_template('singlebook.html', apidata = apidata, dbdata = dbdata, dbreviews = dbreviews, isbn = isbn )
     else:
-        flash('Data fetch failed')
+        flash('Could not fetch data.')
         return render_template('singlebook.html', dbdata = dbdata, dbreviews = dbreviews, isbn = isbn, baseUrl = baseUrl)
 
     
