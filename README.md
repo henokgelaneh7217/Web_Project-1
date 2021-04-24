@@ -24,7 +24,9 @@ In this project, you’ll build a book review website. Users will be able to reg
 
 # Video Preentation
 
-[![Alt text](https://img.youtube.com/vi/c7DTWq3OikE/0.jpg)](https://www.youtube.com/watch?v=v=c7DTWq3OikE)
+Click Below To See Video:
+
+[![Alt text](https://img.youtube.com/vi/c7DTWq3OikE/0.jpg)](https://www.youtube.com/watch?v=c7DTWq3OikE)
 
 # Features
 
