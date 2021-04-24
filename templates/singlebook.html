@@ -21,7 +21,7 @@
   <div class="col-md-3">
     <div class="card">
       <div class="card-body">
-        <img src="{{url_for('static', filename = 'img/book.png')}}" />
+        <img src="http://covers.openlibrary.org/b/isbn/{{isbn}}-L.jpg" />
       </div>
     </div>
   </div>
@@ -30,7 +30,6 @@
       {%if dbdata %}
       <table class="table table-striped">
         <thead>
-          <!-- data from database -->
           {%for i in dbdata%}
           <tr>
             <th>Title</th>
@@ -40,7 +39,7 @@
         <tbody>
           <tr>
             <th>Author</th>
-            <td>{{i[3]}}</td>
+            <td><a href="https://en.wikipedia.org/wiki/{{i[3]}}">{{i[3]}}</a></td>
           </tr>
           <tr>
             <th>Year</th>
@@ -49,7 +48,7 @@
           <tr>
             <th>ISBN</th>
             <td>
-             {{i[1]}}
+             <a href="{{baseUrl}}/api"> {{i[1]}}</a>
            </td>
          </tr>
          {%endfor%}
@@ -58,10 +57,6 @@
          <tr>
           <th>Total Reviews</th>
           <td>{{apidata['books'][0]['work_reviews_count']}}</td>
-        </tr>
-        <tr>
-          <th>Total Ratings</th>
-          <td>{{apidata['books'][0]['work_ratings_count']}}</td>
         </tr>
         <tr>
           <th>Average rating</th>
@@ -149,10 +144,6 @@
        -->
     </div>
       {%endfor%} {%else %}
-<<<<<<< HEAD
-=======
-
->>>>>>> f5449388af610b20681ccf0b307e70441fa90d87
       <h4>No Reviews Yet!</h4>
       {%endif%}
     </div>

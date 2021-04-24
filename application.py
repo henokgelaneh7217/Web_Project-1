@@ -29,6 +29,19 @@ def signup():
     else:
         return render_template('register.html')
 
+@app.route('/signout')
+def signout():
+    if 'name' in session:
+        session.pop('name', None)
+        session.pop('email', None)
+        session.pop('password', None)
+
+        flash('Sign Out Sucessful.', 'info')
+        return redirect(url_for('signin'))
+    else:
+        flash('Already Singed out.')
+        return  redirect(url_for('signin'))
+
 @app.route('/profile')
 def profile():
     if 'email' in session:    
@@ -138,19 +151,6 @@ def home():
         flash('Sign In first')
         return redirect(url_for('signin'))
 
-@app.route('/signout')
-def signout():
-    if 'name' in session:
-        session.pop('name', None)
-        session.pop('email', None)
-        session.pop('password', None)
-
-        flash('Sign Out Sucessful.', 'info')
-        return redirect(url_for('signin'))
-    else:
-        flash('Already Singed out.')
-        return  redirect(url_for('signin'))
-
 @app.route('/book', methods=['GET', 'POST'])
 def search():
     if request.method == "POST":
@@ -218,6 +218,9 @@ def singleBook(isbn):
     cur.execute(query3, (isbn,email,))
     alreadyHasReview = cur.fetchall()
 
+    apiCall = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "", "isbns": isbn })
+    apidata = apiCall.json()
+
     if request.method == 'POST':
         if alreadyHasReview: 
             flash("There's another review on record")
@@ -231,11 +234,30 @@ def singleBook(isbn):
             flash('Review Submitted!')
     
     if apiCall:
-        return render_template('singlebook.html', apidata = apidata, dbdata = dbdata, dbreviews = dbreviews, isbn = isbn )
+        return render_template('singlebook.html', apidata = apidata, dbdata = dbdata, dbreviews = dbreviews, isbn = isbn, baseUrl = baseUrl)
     else:
         flash('Could not fetch data.')
         return render_template('singlebook.html', dbdata = dbdata, dbreviews = dbreviews, isbn = isbn, baseUrl = baseUrl)
-
+@app.route("/book/<string:isbn>/api")
+def apicall(isbn):
+    query = "SELECT * FROM public.books WHERE isbn=%s"
+    cur.execute(query, (isbn,))
+    bookdata = cur.fetchone()
+    if bookdata:
+        res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "", "isbns": isbn})
+        average_rating=res.json()['books'][0]['average_rating']
+        work_ratings_count=res.json()['books'][0]['work_ratings_count']
+        x = {
+            "title": bookdata[2],
+            "author": bookdata[3],
+            "year": bookdata[4],
+            "isbn": isbn,
+            "review_count": work_ratings_count,
+            "average_rating": average_rating
+        }
+        return  jsonify(x)
+    else:
+        return render_template('error.html')
 
 if __name__ == '__main__':
     app.run(debug =True)
