@@ -8,10 +8,15 @@ This project is adopted form Harvard's most popular class **CS50** Programming w
 3. Learn to use SQL to interact with databases.
 
 # Submitted By
+
 * Name: Henok Gelaneh
 * ID: ATR/7217/10
 * Section: IT
-* Email: henokgelaneh@gmail.com           
+* Email: henokgelaneh@gmail.com     
+
+* Github Repository for Project: https://github.com/henokgelaneh7217/Web_Project-1/tree/master
+* Heroku Deployment: https://bookreview-project-1.herokuapp.com/
+     
 
 # Overview
 
