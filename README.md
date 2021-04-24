@@ -21,19 +21,39 @@ In this project, you’ll build a book review website. Users will be able to reg
 Alright, it’s time to actually build your web application! Here are the requirements:
 
 1. **Registration**
-![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/login.png)
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/signuo.png)
 2. **Login**
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/login.png)
+3. **Profile Page**
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/profile.png)
+4. **Book Reader**
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/homepage.png)
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/homepagebookreader.png)
+5. **Import**
 
-3. **Logout**
-
-4. **Import**
-
-5. **Search**
-
-6. **Book Page**
-
+The following code in our iports.py file lets us import any csv file to our connected database.
+```Python
+import csv
+import os 
+with open('books.csv','r') as f:
+    
+    timeset= datetime.datetime.now()
+    reader=csv.reader(f)
+    next(reader)
+    for row in reader:
+        i += 1 
+        cur.execute(" INSERT INTO public.books (isbn, title, author, year ) VALUES (%s,%s,%s,%s)",row)
+```
+6. **Search**
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/searchpage.png)
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/results1.png)
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/results2.png)
+7. **Book Page**
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/bookpage.png)
 8. **Review Submission**
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/personrev.png)
+9. **Goodreads Review Data**
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/apidata.png)
+10. **API Access**
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/jsondata.png)
 
-8. **Goodreads Review Data**
-
-9. **API Access**
