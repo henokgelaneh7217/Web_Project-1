@@ -8,9 +8,9 @@ This project is adopted form Harvard's most popular class **CS50** Programming w
 3. Learn to use SQL to interact with databases.
 
 # Submitted By
-*Name: Henok Gelaneh
-*ID: ATR/7217/10
-*Section: IT
+* Name: Henok Gelaneh
+* ID: ATR/7217/10
+* Section: IT
 
 # Overview
 
