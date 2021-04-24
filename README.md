@@ -21,7 +21,7 @@ In this project, you’ll build a book review website. Users will be able to reg
 Alright, it’s time to actually build your web application! Here are the requirements:
 
 1. **Registration**
-![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/Log in - Brave 4_24_2021 3_47_49 PM.png)
+![](https://github.com/henokgelaneh7217/Rescources/blob/main/imgs/login.png)
 2. **Login**
 
 3. **Logout**
